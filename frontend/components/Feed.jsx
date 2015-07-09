@@ -1,22 +1,21 @@
 var React = require('react');
 var Router = require('react-router');
-var request = require('superagent');
+
+var feedActions = require('../actions/feedActions.js');
+var articleActions = require('../actions/articleActions.js');
+
+var Reflux = require('reflux');
+var FeedStore = require('../stores/FeedStore.js');
+
+var ArticleList = require('./ArticleList.jsx');
+var FeedHeader = require('./Feed/FeedHeader.jsx');
 
 var Feed = React.createClass({
-    mixins: [Router.State],
-
-    getInitialState: function() {
-        return {
-            feed: null
-        }
-    },
+    mixins: [Router.State, Reflux.connect(FeedStore)],
 
     init: function() {
         var id = this.getParams().id;
-        request.get('/api/feed/'+id, function(err, res) {
-            console.log(res);
-            this.setState({feed: res.body });
-        }.bind(this))
+        feedActions.fetchFeed(id);
     },
 
     componentDidMount: function() {
@@ -32,11 +31,8 @@ var Feed = React.createClass({
         var json = JSON.stringify( this.state.feed );
         return(
             <div>
-                <div>Feed {id}</div>
-                <div>Content : </div>
-                <pre>
-                {json}
-                </pre>
+                <FeedHeader feed={this.state.feed} />
+                <ArticleList feedId={id} />
             </div>
         )
     }

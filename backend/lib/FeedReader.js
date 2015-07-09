@@ -43,6 +43,7 @@ export default class FeedReader extends events.EventEmitter {
         }
         while( item = this.feedParser.read() ) {
             this.items.push(item);
+            this.emit('item', item );
         }
     }
 

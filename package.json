@@ -26,15 +26,17 @@
   },
   "devDependencies": {
     "babelify": "^6.1.2",
+    "browserify-css": "^0.6.1",
     "file-loader": "^0.8.4",
     "jsx-loader": "^0.13.2",
     "reactify": "^1.1.1",
+    "sassify": "^0.9.1",
     "style-loader": "^0.12.3",
     "url-loader": "^0.5.6"
   },
   "scripts": {
     "start": "nodemon --exec npm run babel-node -- backend/server.js",
-    "watch": "watchify -v -t reactify -t babelify -o public/js/bundle.js frontend/app.js",
+    "watch": "watchify -v -t reactify -t babelify -t browserify-css -o public/js/bundle.js frontend/app.js",
     "babel-node": "babel-node --stage 0"
   },
   "author": "",

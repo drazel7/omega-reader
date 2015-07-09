@@ -1,0 +1,8 @@
+.articleEntry .header {
+    background-color: #006666;
+    font-weight: bold;
+}
+
+.articleEntry .description {
+    border: 1px solid #000000;
+}

@@ -3,6 +3,8 @@ var Reflux = require('reflux');
 var Navigation = require('react-router').Navigation;
 var Auth = require('../../services/Auth.js');
 
+require('../../styles/login.css');
+
 var Login = React.createClass({
 
     mixins:[Navigation],
@@ -40,7 +42,7 @@ var Login = React.createClass({
 
     render: function() {
         return (
-            <div>
+            <div className="login">
                 {this.renderErrorMsg()}
                 <input type="text" name="username" id="username" ref="username" className="form-control" placeholder="Enter your username" />
                 <input type="password" name="password" id="password" ref="password" className="form-control" />

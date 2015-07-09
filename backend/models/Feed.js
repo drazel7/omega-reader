@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var FeedReader = require('../lib/FeedReader.js');
+var Article = require('./Article.js');
 
 var FeedSchema = {
     url:String,
@@ -14,6 +15,7 @@ var Feed = mongoose.model('Feed', FeedSchema, 'feeds');
 
 Feed.createFromURL = function( feedURL , cb) {
     var feedReader = new FeedReader( feedURL );
+
     feedReader.on('meta', function( meta ) {
         var feed = new Feed({
             url: feedURL,
@@ -21,9 +23,35 @@ Feed.createFromURL = function( feedURL , cb) {
             description: meta.description
          });
 
-        feed.save( cb );
+        feed.save( function(err, feed ) {
+            if( !err ) {
+                // Permet de créer les articles deja lus
+                if( feedReader.items.length > 0 ) {
+                    feedReader.items.map(function(item) {
+                        Article.createFromItem(feed, item);
+                    })
+                }
+                // Créer les articles au fur et a mesure qu'on les lit
+                feedReader.on('item', function( item ) {
+                    Article.createFromItem(feed, item );
+                });
+            }
+            cb(err, feed );
+        } );
     });
+
     feedReader.read();
 }
+
+Feed.prototype.fetchArticles = function() {
+    var feedReader = new FeedReader( this.url );
+
+    feedReader.on('item', function( item ) {
+        Article.createFromItem( this, item );
+    });
+
+    feedReader.read();
+}
+
 
 module.exports = Feed;
