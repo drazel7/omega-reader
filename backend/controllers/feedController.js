@@ -51,6 +51,17 @@ var feedController = {
             });
 
         });
+    },
+
+    fetchArticles: function(req, res, next) {
+        var id = req.params.id;
+
+        Feed.findById(id, function( err, feed ) {
+            if( err ) return next(err);
+            feed.fetchArticles( function( items ) {
+                res.json( items );
+            })
+        })
     }
 
 

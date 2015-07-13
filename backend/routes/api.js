@@ -7,6 +7,7 @@ var api = express.Router();
 
 //non protected
 api.get('/feed/:id',  feedController.getFeed );
+api.get('/feed/:id/fetch', feedController.fetchArticles );
 
 //protected
 api.get('/feeds', authController.isLoggedIn, feedController.getUserFeeds );

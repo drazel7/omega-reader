@@ -8,7 +8,8 @@ var FeedSchema = {
     description:String,
     category:String,
     language:String,
-    imageUrl:String
+    imageUrl:String,
+    lastFetchDate: Date
 };
 
 var Feed = mongoose.model('Feed', FeedSchema, 'feeds');
@@ -20,7 +21,8 @@ Feed.createFromURL = function( feedURL , cb) {
         var feed = new Feed({
             url: feedURL,
             title: meta.title,
-            description: meta.description
+            description: meta.description,
+            lastFetchDate: new Date()
          });
 
         feed.save( function(err, feed ) {
@@ -43,14 +45,27 @@ Feed.createFromURL = function( feedURL , cb) {
     feedReader.read();
 }
 
-Feed.prototype.fetchArticles = function() {
+Feed.prototype.fetchArticles = function( cb ) {
     var feedReader = new FeedReader( this.url );
 
+    var newItems = [];
+
     feedReader.on('item', function( item ) {
-        Article.createFromItem( this, item );
+        Article.createFromItem( this, item , function(err, article ) {
+            if( !err ) {
+                newItems.push( article );
+            }
+        });
+    });
+
+    feedReader.on('end', function() {
+        cb( newItems );
     });
 
     feedReader.read();
+
+    this.lastFetchDate = new Date();
+    this.save();
 }
 
 

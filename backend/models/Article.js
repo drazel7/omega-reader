@@ -17,11 +17,12 @@ articleSchema.index({feed: 1, guid: 1}, {unique: true});
 
 var Article = mongoose.model('Article', articleSchema, 'articles');
 
-Article.createFromItem = function( feed, item ) {
+Article.createFromItem = function( feed, item , cb ) {
     item.feed = feed._id;
+    if( !cb ) cb = function() {}
 
     var article = new Article(item);
-    article.save();
+    article.save( cb );
 }
 
 module.exports = Article;

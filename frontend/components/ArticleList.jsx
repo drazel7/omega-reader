@@ -3,14 +3,14 @@ var Reflux = require('reflux');
 var Router = require('react-router');
 
 
-var ArticleStore = require('../stores/ArticleStore.js');
+var ArticleListStore = require('../stores/ArticleListStore.js');
 var articleActions = require('../actions/articleActions.js');
 
 var ArticleEntry = require('./Article/ArticleEntry.jsx');
 
 var ArticleList = React.createClass({
 
-    mixins: [Router.State, Reflux.connect(ArticleStore)],
+    mixins: [Router.State, Reflux.connect(ArticleListStore)],
 
     componentDidMount: function() {
         this.init();
@@ -27,7 +27,7 @@ var ArticleList = React.createClass({
 
     render: function() {
         var items = this.state.articles.map(function(article) {
-            return (<ArticleEntry article={article} />);
+            return (<ArticleEntry key={article._id} article={article} />);
         });
         return (
             <div>

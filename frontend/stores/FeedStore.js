@@ -9,7 +9,6 @@ var FeedStore = Reflux.createStore({
 
     getInitialState: function() {
         return {
-            feeds: [],
             feed: null
         }
     },
@@ -24,18 +23,9 @@ var FeedStore = Reflux.createStore({
         );
     },
 
-    onFetchFeeds: function() {
-        Auth.authenticatedQuery(
-            request.get('/api/feeds')
-                .then(function (res) {
-                    this.trigger( {feeds: res.data });
-                }.bind(this))
-        );
-    },
-
     onFetchFeed: function(id) {
         request.get('/api/feed/'+id).then( function( res ) {
-            this.setState({feed: res.body });
+            this.trigger({feed: res.data });
         }.bind(this));
     }
 

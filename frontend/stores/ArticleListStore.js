@@ -3,13 +3,13 @@ var request = require('axios');
 
 var articleActions = require('../actions/articleActions.js');
 
-var ArticleStore = Reflux.createStore({
+var ArticleListStore = Reflux.createStore({
 
     listenables:[articleActions],
 
     getInitialState: function() {
         return {
-            article: null
+            articles: []
         }
     },
 
@@ -20,10 +20,10 @@ var ArticleStore = Reflux.createStore({
                 refresh: refresh
             }
         }).then(function (res) {
-                this.trigger( {articles: res.data });
-            }.bind(this))
+            this.trigger( {articles: res.data });
+        }.bind(this))
     }
 
 });
 
-module.exports = ArticleStore;
+module.exports = ArticleListStore;

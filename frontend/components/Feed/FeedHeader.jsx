@@ -1,14 +1,25 @@
 var React = require('react');
 
+var Reflux = require('reflux');
+var FeedStore = require('../../stores/FeedStore.js');
+
+var articleActions = require('../../actions/articleActions.js');
+
 var FeedHeader = React.createClass({
 
-    render: function() {
+    mixins: [ Reflux.connect( FeedStore )],
 
-        if( this.props.feed == null ) {
-            return <div />
-        } else {
-            return <div>{this.props.feed.title}</div>
-        }
+    handleFetchArticles: function() {
+        articleActions.fetchFeedArticles( this.state.feed.id, true );
+    },
+
+    render: function() {
+        return (
+            <div>
+                <span>{this.state.feed && this.state.feed.title}</span>
+                <button onClick={this.handleFetchArticles}>Refresh</button>
+            </div>
+        );
     }
 
 });
